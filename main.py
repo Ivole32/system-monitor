@@ -1,17 +1,21 @@
 import psutil
 import time
 import os
+import keyboard
 from rich.console import Console
 from rich.table import Table
 from rich.layout import Layout
 from rich.panel import Panel
 from rich.align import Align
+from prompt_toolkit import prompt
 
 console = Console()
 
 min_cpu, max_cpu = None, None
 min_ram, max_ram = None, None
 min_disk, max_disk = None, None
+
+user_command_log = []
 
 def get_system_stats_table():
     global min_cpu, max_cpu, min_ram, max_ram, min_disk, max_disk
@@ -87,9 +91,21 @@ def get_ssh_connections_table():
     return table
 
 def main_loop():
-    os.system("clear")
-
     while True:
+        if keyboard.is_pressed('c'):
+            console.print("[bold yellow]Kommando-Modus aktiviert![/bold yellow] (Eingabe mit Enter, Abbrechen mit Strg+C)")
+            try:
+                command = prompt("Command > ")
+                if command == "exit":
+                    exit(0)
+                elif command == "help":
+                    print("Help")
+
+            except KeyboardInterrupt:
+                console.print("[red]Eingabe abgebrochen.[/red]")
+            time.sleep(1)
+            continue
+
         layout = Layout()
 
         layout.split_row(
@@ -99,36 +115,24 @@ def main_loop():
         )
 
         system_table = get_system_stats_table()
-        system_panel = Panel(
-            Align.center(system_table), 
-            title="System Overview", 
-            border_style="cyan"
-        )
-        layout["system"].update(system_panel)
+        layout["system"].update(Panel(Align.center(system_table), title="System Overview", border_style="cyan"))
 
         terminal_height = console.size.height
         max_process_rows = max(3, terminal_height - 10)
         process_table = get_top_processes_table(max_process_rows)
-        process_panel = Panel(
-            Align.center(process_table), 
-            title="Top Processes", 
-            border_style="magenta"
-        )
-        layout["processes"].update(process_panel)
+        layout["processes"].update(Panel(Align.center(process_table), title="Top Processes", border_style="magenta"))
 
         ssh_table = get_ssh_connections_table()
-        ssh_panel = Panel(
-            Align.center(ssh_table), 
-            title="SSH Connections", 
-            border_style="green"
-        )
-        layout["ssh"].update(ssh_panel)
+        layout["ssh"].update(Panel(Align.center(ssh_table), title="SSH Connections", border_style="green"))
 
         console.clear()
         console.print(layout)
 
-        time.sleep(1)
+        if user_command_log:
+            last = user_command_log[-1]
+            console.print(f"[bold blue]Letzter Befehl:[/bold blue] {last}")
 
+        time.sleep(1)
 
 if __name__ == "__main__":
     main_loop()
