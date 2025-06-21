@@ -105,7 +105,7 @@ def main_loop():
             console.print("[bold yellow]Command mode activated![/bold yellow] (Submit with Enter, cancel with Ctrl+C or q)")
             while True:
                 try:
-                    command = prompt("Command > ", history=history)
+               d     command = prompt("Command > ", history=history)
                     if command == "exit":
                         exit(0)
 
