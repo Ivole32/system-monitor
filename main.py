@@ -113,12 +113,18 @@ def main_loop():
                         break
 
                     elif command == "help":
-                        console.print("""exit: Exit the program
-                                 \nhelp: Print this help
-                                 \nq: Exit the terminal
-                                 \nkill <PID,...>: Kills the specified processes
-                                 \nssh-ban <IP> <SSH-PORT (Optional)>: Bans a specific IP for SSH access
-                                 \nssh-unban <IP> <SSH-PORT (Optional)>: Unbans a specific IP for SSH access""")
+                        console.print("""\
+                        exit                        – Exit the program
+                        help                        – Show this help message
+                        q                           – Quit the terminal
+                        kill <PID,...>              – Kill the specified process(es) by PID
+                        ssh-ban <IP> [PORT]         – Permanently block SSH access from the given IP (default port is 22)
+                        ssh-unban <IP> [PORT]       – Remove SSH block for the given IP (default port is 22)
+                        ssh-timeout <IP> [PORT]     – Temporarily block SSH access from the given IP (default port is 22)
+                        ip-ban <IP>                 – Permanently block all traffic from the given IP
+                        ip-unban <IP>               – Remove all traffic blocks for the given IP
+                        ip-timeout <IP> <SECONDS>   – Temporarily block all traffic from the given IP for the specified duration
+                        """)
 
                     elif "kill" in command:
                         try:
@@ -137,6 +143,22 @@ def main_loop():
 
                     elif "ssh-unban " in command:
                         system_command = command.replace("ssh-ban", "./ssh-unban.sh")
+                        os.system(system_command)
+                                            
+                    elif command == "ssh-timeout":
+                        system_command = command.replace("ssh-timeout", "./ssh-timeout.sh")
+                        os.system(system_command)
+
+                    elif command == "ip-ban":
+                        system_command = command.replace("ip-ban", "./ip-ban.sh")
+                        os.system(system_command)
+
+                    elif command == "ip-unban":
+                        system_command = command.replace("ip-unban", "./ip-unban.sh")
+                        os.system(system_command)
+
+                    elif command == "ip-timeout":
+                        system_command = command.replace("ip-timeout", "./ip-timeout.sh")
                         os.system(system_command)
 
                 except KeyboardInterrupt:
