@@ -1,21 +1,25 @@
+import keyboard
 import psutil
 import time
 import os
-import keyboard
+
 from rich.console import Console
 from rich.table import Table
 from rich.layout import Layout
 from rich.panel import Panel
 from rich.align import Align
+
 from prompt_toolkit import prompt
+from prompt_toolkit.history import InMemoryHistory
 
 console = Console()
+history = InMemoryHistory()
 
 min_cpu, max_cpu = None, None
 min_ram, max_ram = None, None
 min_disk, max_disk = None, None
 
-user_command_log = []
+history.append_string("help")
 
 def get_system_stats_table():
     global min_cpu, max_cpu, min_ram, max_ram, min_disk, max_disk
@@ -39,7 +43,7 @@ def get_system_stats_table():
     if max_disk is None or disk_percent > max_disk:
         max_disk = disk_percent
 
-    table = Table(title="System Monitor")
+    table = Table(title="System Monitor", expand=True)
     table.add_column("Component", style="cyan", justify="right")
     table.add_column("Current", style="green")
     table.add_column("Min", style="green")
@@ -52,7 +56,7 @@ def get_system_stats_table():
     return table
 
 def get_top_processes_table(max_rows):
-    table = Table(title="Top Processes (by CPU)")
+    table = Table(title="Top Processes (by CPU)", expand=True)
     table.add_column("PID", style="cyan")
     table.add_column("Name", style="magenta")
     table.add_column("CPU %", style="green", justify="right")
@@ -74,35 +78,71 @@ def get_top_processes_table(max_rows):
     return table
 
 def get_ssh_connections_table():
-    table = Table(title="SSH Connections")
-    table.add_column("Local Addr", style="cyan")
-    table.add_column("Remote Addr", style="magenta")
-    table.add_column("Status", style="green")
-    table.add_column("PID", style="red", justify="right")
+    table = Table(title="SSH Connections", expand=True)
+
+    table.add_column("Local Addr", style="cyan", overflow="fold")
+    table.add_column("Remote Addr", style="magenta", overflow="fold")
+    table.add_column("Status", style="green", justify="center", overflow="fold")
+    table.add_column("PID", style="red", justify="right", overflow="fold")
 
     for conn in psutil.net_connections(kind='inet'):
-        if conn.status == 'ESTABLISHED' and conn.laddr.port == 22:
-            local_addr = f"{conn.laddr.ip}:{conn.laddr.port}"
-            remote_addr = f"{conn.raddr.ip}:{conn.raddr.port}" if conn.raddr else "-"
-            status = conn.status
-            pid = str(conn.pid) if conn.pid else "-"
-            table.add_row(local_addr, remote_addr, status, pid)
+        try:
+            if conn.status == 'ESTABLISHED' and conn.laddr.port == 22:
+                local_addr = f"{conn.laddr.ip}:{conn.laddr.port}"
+                remote_addr = f"{conn.raddr.ip}:{conn.raddr.port}" if conn.raddr else "-"
+                status = conn.status
+                pid = str(conn.pid) if conn.pid else "-"
+                table.add_row(local_addr, remote_addr, status, pid)
+        except Exception:
+            continue
 
     return table
 
 def main_loop():
+    command_log = []
     while True:
         if keyboard.is_pressed('c'):
-            console.print("[bold yellow]Kommando-Modus aktiviert![/bold yellow] (Eingabe mit Enter, Abbrechen mit Strg+C)")
-            try:
-                command = prompt("Command > ")
-                if command == "exit":
-                    exit(0)
-                elif command == "help":
-                    print("Help")
+            console.print("[bold yellow]Command mode activated![/bold yellow] (Submit with Enter, cancel with Ctrl+C or q)")
+            while True:
+                try:
+                    command = prompt("Command > ", history=history)
+                    if command == "exit":
+                        exit(0)
 
-            except KeyboardInterrupt:
-                console.print("[red]Eingabe abgebrochen.[/red]")
+                    elif command == "q":
+                        break
+
+                    elif command == "help":
+                        console.print("""exit: Exit the program
+                                 \nhelp: Print this help
+                                 \nq: Exit the terminal
+                                 \nkill <PID,...>: Kills the specified processes
+                                 \nssh-ban <IP> <SSH-PORT (Optional)>: Bans a specific IP for SSH access
+                                 \nssh-unban <IP> <SSH-PORT (Optional)>: Unbans a specific IP for SSH access""")
+
+                    elif "kill" in command:
+                        try:
+                            pids = command.split("kill ")[1].split(",")
+                            for pid in pids:
+                                if os.system(f"kill {pid}") == 0:
+                                    console.print(f"[green]Killed PID: {pid}[/green]")
+                                else:
+                                    console.print(f"[red]Error while killing PID: {pid}[/red]")
+                        except Exeption as e:
+                            console.print(f"[red]{e}[/red]")
+
+                    elif "ssh-ban " in command:
+                        system_command = command.replace("ssh-ban", "./ssh-ban.sh")
+                        os.system(system_command)
+
+                    elif "ssh-unban " in command:
+                        system_command = command.replace("ssh-ban", "./ssh-unban.sh")
+                        os.system(system_command)
+
+                except KeyboardInterrupt:
+                    console.print("[red]Entry canceled.[/red]")
+                    break
+            
             time.sleep(1)
             continue
 
@@ -127,10 +167,6 @@ def main_loop():
 
         console.clear()
         console.print(layout)
-
-        if user_command_log:
-            last = user_command_log[-1]
-            console.print(f"[bold blue]Letzter Befehl:[/bold blue] {last}")
 
         time.sleep(1)
 
