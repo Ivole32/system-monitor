@@ -41,18 +41,21 @@ Bans a specific IP for SSH access to the system. It takes an IP of the remot hos
 Unbans a specific IP for SSH access on the system. It takes the IP of the banned remote system and the local SSH port (This argument is optional -> standart: 22).
 
 ### `ssh-timeout <IP> [PORT]`
-Timeouts a specific IP for SSH acces to the system. It takes the IP of the remote host you want to timeout and the local SSH port (This argument is optional -> standart: 22).
+Timeouts a specific IP for SSH access to the system. It takes the IP of the remote host you want to timeout and the local SSH port (This argument is optional -> standart: 22).
 
 ### `ip-ban <IP>`
 Permanently block all traffic from the given IP. It takes the IP of the remote system.
 
-## `ip-unban <IP>`
+### `ip-unban <IP>`
 Unbans a banned IP to reallow traffic from the given IP. It takes the IP of the remote system.
 
 **Note:** This will unban the IP for all traffic but **not** if you banned the IP for SSH. You have to do this by yourself with [`ssh-unban`](#ssh-unban-ip-port)
 
+### `ip-timeout <IP> <SECONDS>`
+Timeouts traffic from a specific IP for the given time in seconds. It takes the IP to timeout and the timeout time in seconds.
 
 
+## Command tabel
 | Command                          | Explanation                                                                 |
 |--------------------------------|------------------------------------------------------------------------------|
 | `exit`                         | Exit the program                                                             |
