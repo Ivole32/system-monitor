@@ -54,17 +54,31 @@ Unbans a banned IP to reallow traffic from the given IP. It takes the IP of the 
 ### `ip-timeout <IP> <SECONDS>`
 Timeouts traffic from a specific IP for the given time in seconds. It takes the IP to timeout and the timeout time in seconds.
 
+### `create`
+If you want to create custom commands in the build in command line you can use `create`. Just answer the questions about the name, the execution command and the description.
+
+### `delete <COMMAND>`
+If you want to delete a custom command you can use this.
+
+### `disable <COMMAND>`
+Use this to disable a custom command. 
+
+### `enable <COMMAND>`
+Use this to (re)enable a custom command.
 
 ## Command tabel
-| Command                          | Explanation                                                                 |
-|--------------------------------|------------------------------------------------------------------------------|
-| `exit`                         | Exit the program                                                             |
-| `help`                         | Show this help message                                                       |
-| `q`                            | Quit the terminal                                                            |
-| `kill <PID,...>`               | Kill the specified process(es) by PID                                        |
-| `ssh-ban <IP> [PORT]`          | Permanently block SSH access from the given IP (default port is 22)         |
-| `ssh-unban <IP> [PORT]`        | Remove SSH block for the given IP (default port is 22)                      |
-| `ssh-timeout <IP> [PORT]`      | Temporarily block SSH access from the given IP (default port is 22)         |
-| `ip-ban <IP>`                  | Permanently block all traffic from the given IP                             |
-| `ip-unban <IP>`                | Remove all traffic blocks for the given IP                                  |
-| `ip-timeout <IP> <SECONDS>`    | Temporarily block all traffic from the given IP for the specified duration  |
+| Command                       | Description                                                                 |
+|------------------------------|-----------------------------------------------------------------------------|
+| `exit`                         | Exit the program                                                           |
+| `help`                        | Show this help message                                                     |
+| `q`                           | Quit the terminal                                                          |
+| `create`                      | Create a new command                                                       |
+| `delete <COMMAND>`            | Delete a custom command                                                    |
+| `enable/disable <COMMAND>`    | Enable or disable a custom command                                         |
+| `kill <PID,...>`              | Kill the specified process(es) by PID                                      |
+| `ssh-ban <IP> [PORT]`         | Permanently block SSH access from the given IP (default port is 22)        |
+| `ssh-unban <IP> [PORT]`       | Remove SSH block for the given IP (default port is 22)                     |
+| `ssh-timeout <IP> [PORT]`     | Temporarily block SSH access from the given IP (default port is 22)        |
+| `ip-ban <IP>`                 | Permanently block all traffic from the given IP                            |
+| `ip-unban <IP>`               | Remove all traffic blocks for the given IP                                 |
+| `ip-timeout <IP> <SECONDS>`   | Temporarily block all traffic from the given IP for the specified duration |
