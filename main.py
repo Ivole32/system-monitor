@@ -115,7 +115,8 @@ def main_loop():
     config_commands = ast.literal_eval(config.get_config_value("commands", topic='custom-commands'))
 
     for command in config_commands:
-        commands.append(command)
+        if command[3]:
+            commands.append(command)
 
     def check_command(user_command) -> bool | int:
         i = 0
