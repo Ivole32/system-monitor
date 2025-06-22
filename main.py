@@ -1,7 +1,12 @@
-import keyboard
 import psutil
 import time
 import os
+
+if os.geteuid() == 0:
+    import keyboard
+    sudo_user = True
+else:
+    sudo_user = False
 
 from rich.console import Console
 from rich.table import Table
@@ -101,7 +106,7 @@ def get_ssh_connections_table():
 def main_loop():
     command_log = []
     while True:
-        if keyboard.is_pressed('c'):
+        if sudo_user and keyboard.is_pressed('c'):
             console.print("[bold yellow]Command mode activated![/bold yellow] (Submit with Enter, cancel with Ctrl+C or q)")
             while True:
                 try:
@@ -196,4 +201,7 @@ def main_loop():
         time.sleep(1)
 
 if __name__ == "__main__":
-    main_loop()
+    try:
+        main_loop()
+    except KeyboardInterrupt:
+        pass
