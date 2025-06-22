@@ -10,7 +10,26 @@ To install all packages use ```sudo apt install iptables, conntrack, ufw```
 
 ### 1.3 Enable ufw
 To enable the ufw service use ```sudo systemctl enable ufw```
-<br>Make sure to start ufw (```sudo systemctl start ufw```) and check if everything is installde correctly with ```sudo systemctl status ufw```
+<br>Make sure to start ufw (```sudo systemctl start ufw```) and check if everything is installed correctly with ```sudo systemctl status ufw```
 
-## 2. Install all python requirements
+## 2. Cloning the repository
+### 2.1 cd into the right place
+You should open a terminal and use ```cd``` to move to the directory you want the repository to be safed in.
+
+## 2.2 Clone the repository
+Use ```git clone https://github.com/ivole32/system-monitor```to clone the repository into your files.
+
+If you don't have git installed:
+#### 1. Solution
+You can find the installation instructions for git [here](https://github.com/git-guides/install-git).
+
+#### 2. Solution
+You can also download the repository manually from [here](https://github.com/ivole32/system-monitor).
+
+
+## 3. Install all python requirements
 To install all pyton requirements cd into the repository and run ```pip install -r requirements.txt```
+
+**If** you want to use the program as **sudo user** (for the build in command line) make shure you use sudo before the ```pip``` command.
+
+If you want to know how tu use the program look [here]()

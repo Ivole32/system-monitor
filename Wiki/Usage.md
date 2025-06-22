@@ -1,0 +1,67 @@
+# Usage
+
+## Non root user (only display)
+### 1. cd to repository
+Open a terminal and use ```cd <Repository Path>```
+
+### 2. Run the python script
+Go to the terminal type ```python3 ./main.py``` and hit enter.
+
+## Root user (for the build in command tool)
+### 1. cd to repository
+Open a terminal and use ```cd <Repository Path>```
+
+### 2. Run the python script
+Go to the terminal type ```sudo python3 ./main.py``` and hit enter.
+
+Now you can see the system monitor. If you want to use the build in command tool proced to step **3**.
+
+### 3. Use the command line tool
+To use the build in command line tool simply hold  down ```c``` and wait untill ```Command >``` pops up.
+
+You can now use help to see the commands or go [here](#build-in-commands)
+
+## Build in commands
+### `exit`
+Exits the whole program.
+
+### `q`
+Exits the command line tool and displays the normal monitoring screen.
+
+### `help`
+Shows a quick help messages with all commands that are descibed here.
+
+### `kill <PID,...>`
+Takes a list of PID's seperated by an comma and kills all of them.
+
+### `ssh-ban <IP> [PORT]`
+Bans a specific IP for SSH access to the system. It takes an IP of the remot host to ban and the local SSH port (This argument is optional -> standart: 22).
+
+### `ssh-unban <IP> [PORT]`
+Unbans a specific IP for SSH access on the system. It takes the IP of the banned remote system and the local SSH port (This argument is optional -> standart: 22).
+
+### `ssh-timeout <IP> [PORT]`
+Timeouts a specific IP for SSH acces to the system. It takes the IP of the remote host you want to timeout and the local SSH port (This argument is optional -> standart: 22).
+
+### `ip-ban <IP>`
+Permanently block all traffic from the given IP. It takes the IP of the remote system.
+
+## `ip-unban <IP>`
+Unbans a banned IP to reallow traffic from the given IP. It takes the IP of the remote system.
+
+**Note:** This will unban the IP for all traffic but **not** if you banned the IP for SSH. You have to do this by yourself with [`ssh-unban`](#ssh-unban-ip-port)
+
+
+
+| Command                          | Explanation                                                                 |
+|--------------------------------|------------------------------------------------------------------------------|
+| `exit`                         | Exit the program                                                             |
+| `help`                         | Show this help message                                                       |
+| `q`                            | Quit the terminal                                                            |
+| `kill <PID,...>`               | Kill the specified process(es) by PID                                        |
+| `ssh-ban <IP> [PORT]`          | Permanently block SSH access from the given IP (default port is 22)         |
+| `ssh-unban <IP> [PORT]`        | Remove SSH block for the given IP (default port is 22)                      |
+| `ssh-timeout <IP> [PORT]`      | Temporarily block SSH access from the given IP (default port is 22)         |
+| `ip-ban <IP>`                  | Permanently block all traffic from the given IP                             |
+| `ip-unban <IP>`                | Remove all traffic blocks for the given IP                                  |
+| `ip-timeout <IP> <SECONDS>`    | Temporarily block all traffic from the given IP for the specified duration  |
