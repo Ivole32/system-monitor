@@ -161,6 +161,9 @@ def main_loop():
                         system_command = command.replace("ip-timeout", "./ip-timeout.sh")
                         os.system(system_command)
 
+                    else:
+                        os.system(command)
+
                 except KeyboardInterrupt:
                     console.print("[red]Entry canceled.[/red]")
                     break
