@@ -1,6 +1,5 @@
 import psutil
 import time
-import ast
 import os
 
 if os.geteuid() == 0:
@@ -19,6 +18,7 @@ from prompt_toolkit import prompt
 from prompt_toolkit.history import InMemoryHistory
 
 from config import Configuration
+from command_handler import command_handler
 
 config = Configuration()
 allow_commandline = bool(config.get_config_value("allow-commandline"))
@@ -26,6 +26,7 @@ allow_system_commands = bool(config.get_config_value("allow-system-commands"))
 
 console = Console()
 history = InMemoryHistory()
+command_handler = command_handler(console, config, allow_system_commands)
 
 min_cpu, max_cpu = None, None
 min_ram, max_ram = None, None
@@ -111,100 +112,15 @@ def get_ssh_connections_table():
     return table
 
 def main_loop():
-    commands = []
-    config_commands = ast.literal_eval(config.get_config_value("commands", topic='custom-commands'))
-
-    for command in config_commands:
-        if command[3]:
-            commands.append(command)
-
-    def check_command(user_command) -> bool | int:
-        i = 0
-        for command in commands:
-            if user_command == command[0]:
-                return True, i
-            else:
-                i += 1
-        return False, 0
-
     while True:
         if sudo_user and allow_commandline and keyboard.is_pressed('c'):
             console.print("[bold yellow]Command mode activated![/bold yellow] (Submit with Enter, cancel with Ctrl+C or q)")
             while True:
                 try:
                     command = prompt("Command > ", history=history)
-                    if command == "exit":
-                        exit(0)
-
-                    elif command == "q":
+                    result = command_handler.execute_command(command)
+                    if result == "break flag":
                         break
-
-                    elif command == "help":
-                        help_text = """\
-exit                        – Exit the program
-help                        – Show this help message
-q                           – Quit the terminal
-kill <PID,...>              – Kill the specified process(es) by PID
-ssh-ban <IP> [PORT]         – Permanently block SSH access from the given IP (default port is 22)
-ssh-unban <IP> [PORT]       – Remove SSH block for the given IP (default port is 22)
-ssh-timeout <IP> [PORT]     – Temporarily block SSH access from the given IP (default port is 22)
-ip-ban <IP>                 – Permanently block all traffic from the given IP
-ip-unban <IP>               – Remove all traffic blocks for the given IP
-ip-timeout <IP> <SECONDS>   – Temporarily block all traffic from the given IP for the specified duration
-"""
-                        for custom_command in commands:
-                            name = custom_command[0]
-                            description = custom_command[2]
-
-                            padded_name = name.ljust(27)
-                            command_string = f"{padded_name} – {description}"
-                            help_text += command_string
-
-                        console.print(help_text)
-
-                    elif "kill" in command:
-                        try:
-                            pids = command.split("kill ")[1].split(",")
-                            for pid in pids:
-                                if os.system(f"kill {pid}") == 0:
-                                    console.print(f"[green]Killed PID: {pid}[/green]")
-                                else:
-                                    console.print(f"[red]Error while killing PID: {pid}[/red]")
-                        except Exeption as e:
-                            console.print(f"[red]{e}[/red]")
-
-                    elif "ssh-ban " in command:
-                        system_command = command.replace("ssh-ban", "./ssh-ban.sh")
-                        os.system(system_command)
-
-                    elif "ssh-unban " in command:
-                        system_command = command.replace("ssh-ban", "./ssh-unban.sh")
-                        os.system(system_command)
-                                            
-                    elif command == "ssh-timeout":
-                        system_command = command.replace("ssh-timeout", "./ssh-timeout.sh")
-                        os.system(system_command)
-
-                    elif command == "ip-ban":
-                        system_command = command.replace("ip-ban", "./ip-ban.sh")
-                        os.system(system_command)
-
-                    elif command == "ip-unban":
-                        system_command = command.replace("ip-unban", "./ip-unban.sh")
-                        os.system(system_command)
-
-                    elif command == "ip-timeout":
-                        system_command = command.replace("ip-timeout", "./ip-timeout.sh")
-                        os.system(system_command)
-
-                    else:
-                        custom_command_check, custom_command_index = check_command(command)
-                        if custom_command_check:
-                            os.system(commands[custom_command_index][1])
-
-                        else:
-                            if allow_system_commands:
-                                os.system(command)
 
                 except KeyboardInterrupt:
                     console.print("[red]Entry canceled.[/red]")
