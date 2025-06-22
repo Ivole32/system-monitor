@@ -45,5 +45,5 @@ class Configuration:
     def get_config_value(self, value) -> str:
         try:
             return config['config'][value]
-        finally:
+        except Exception as e:
             return None
