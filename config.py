@@ -15,12 +15,12 @@ class Configuration:
         if not os.path.exists(config_path):
             config['config'] = {}
             config['custom-commands'] = {"commands": []}
-            self.__write_to_config(self._config_options)
+            self.write_to_config(self._config_options)
         else:
             config.read(config_path)
             self.__missing_options = self.__check_config_for_completeness()
             if self.__missing_options:
-                self.__write_to_config(self.__missing_options)
+                self.write_to_config(self.__missing_options)
 
     def __check_config_for_completeness(self) -> dict:
         missing = {}
@@ -34,7 +34,7 @@ class Configuration:
         
         return missing
 
-    def __write_to_config(self, options) -> None:
+    def write_to_config(self, options, topic="config") -> None:
         if 'config' not in config:
             config['config'] = {}
 
@@ -42,7 +42,7 @@ class Configuration:
             config['custom-commands'] = {"commands": []}
 
         for key, value in options.items():
-            config['config'][key] = str(value)
+            config[topic][key] = str(value)
         
         with open(config_path, "w") as configfile:
             config.write(configfile)

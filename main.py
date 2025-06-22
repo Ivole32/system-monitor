@@ -121,11 +121,17 @@ def main_loop():
                     result = command_handler.execute_command(command)
                     if result == "break flag":
                         break
+                    if result == "create":
+                        command_name = prompt("Command Name> ")
+                        command_exec = prompt("Command To Execute > ")
+                        command_description = prompt("Command Description > ")
+
+                        command_handler.create_command(command_name, command_exec, command_description)
 
                 except KeyboardInterrupt:
                     console.print("[red]Entry canceled.[/red]")
                     break
-            
+             
             time.sleep(1)
             continue
 
