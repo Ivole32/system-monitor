@@ -18,7 +18,7 @@ class command_handler():
     def check_command(self, user_command) -> bool | int:
         i = 0
         for command in self.commands:
-            if user_command == command[0]:
+            if command[0] in user_command:
                 return True, i
             else:
                 i += 1
@@ -161,23 +161,25 @@ ip-timeout <IP> <SECONDS>   – Temporarily block all traffic from the given IP 
 
         else:
             custom_command_check, custom_command_index = self.check_command(command)
-            arguments = command.replace(f"{self.commands[custom_command_index][0]} ", "")
-            self.console.print(f"{arguments}")
-            arguments = arguments.split(" ")
+
             if custom_command_check:
+                arguments = command.replace(f"{self.commands[custom_command_index][0]} ", "").split(" ")
+                self.console.print(f"{arguments}, {type(arguments)}")
                 if self.commands[custom_command_index][-1]:
                     system_command = self.commands[custom_command_index][1]
-                    if elf.commands[custom_command_index][2] != "":
+                    if self.commands[custom_command_index][2] != "":
+                        self.console.print("Hier")
                         i = 1
                         while True:
                             try:
-                                system_command.replace(f"${i}", arguments[i-1])
+                                system_command = system_command.replace(f"${i}", arguments[i-1])
                                 i += 1
 
-                            except:
+                            except Exception as e:
+                                self.console.log(f"Exception: {e}")
                                 break
 
-                    os.system(self.commands[custom_command_index][1])
+                    os.system(system_command)
 
             else:
                 if self.allow_system_commands:
