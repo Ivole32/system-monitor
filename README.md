@@ -4,5 +4,7 @@ System Monitor is a Linux-specific monitoring tool designed to simplify life for
 
 You can look at the wiki/documentation [here](https://github.com/Ivole32/system-monitor/wiki).
 
+If you have a question or somethin isn't working right add an issue or text me on slack: Ivole32
+
 Ai Disclaimer:
 I used AI to fix my bad englisch, help me with the idea and it helped me to create some parts of the code.
