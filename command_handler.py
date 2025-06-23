@@ -24,10 +24,10 @@ class command_handler():
                 i += 1
         return False, 0
 
-    def create_command(self, command_name, command_exec, command_description) -> None:
+    def create_command(self, command_name, command_exec, command_arguments, command_description) -> None:
         config_commands = ast.literal_eval(self.config.get_config_value("commands", topic='custom-commands'))
 
-        config_commands.append([command_name, command_exec, command_description, True])
+        config_commands.append([command_name, command_exec, command_arguments, command_description, True])
 
         option = {"commands": config_commands}
 
@@ -58,7 +58,7 @@ class command_handler():
 
         for command in config_commands:
             if command[0] == command_name:
-                command[3] = mode  
+                command[-1] = mode  
                 break
 
         option = {"commands": config_commands}
@@ -96,12 +96,12 @@ ip-unban <IP>               – Remove all traffic blocks for the given IP
 ip-timeout <IP> <SECONDS>   – Temporarily block all traffic from the given IP for the specified duration
 """
             for custom_command in self.commands:
-                name = custom_command[0]
-                description = custom_command[2]
+                name = custom_command[0] + " " + custom_command[2]
+                description = custom_command[3]
 
                 padded_name = name.ljust(27)
                 command_string = f"{padded_name} – {description}"
-                if custom_command[3] == False:
+                if custom_command[-1] == False:
                     command_string += " (Disabled)\n"
                 else:
                     command_string += "\n"
@@ -161,8 +161,22 @@ ip-timeout <IP> <SECONDS>   – Temporarily block all traffic from the given IP 
 
         else:
             custom_command_check, custom_command_index = self.check_command(command)
+            arguments = command.replace(f"{self.commands[custom_command_index][0]} ", "")
+            self.console.print(f"{arguments}")
+            arguments = arguments.split(" ")
             if custom_command_check:
-                if self.commands[custom_command_index][3]:
+                if self.commands[custom_command_index][-1]:
+                    system_command = self.commands[custom_command_index][1]
+                    if elf.commands[custom_command_index][2] != "":
+                        i = 1
+                        while True:
+                            try:
+                                system_command.replace(f"${i}", arguments[i-1])
+                                i += 1
+
+                            except:
+                                break
+
                     os.system(self.commands[custom_command_index][1])
 
             else:

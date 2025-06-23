@@ -124,9 +124,10 @@ def main_loop():
                     if result == "create":
                         command_name = prompt("Command Name> ")
                         command_exec = prompt("Command To Execute > ")
+                        command_arguments = prompt("Arguments > ")
                         command_description = prompt("Command Description > ")
 
-                        command_handler.create_command(command_name, command_exec, command_description)
+                        command_handler.create_command(command_name, command_exec, command_arguments, command_description)
 
                 except KeyboardInterrupt:
                     console.print("[red]Entry canceled.[/red]")
