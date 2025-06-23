@@ -53,7 +53,12 @@ Unbans a banned IP to reallow traffic from the given IP. It takes the IP of the 
 Timeouts traffic from a specific IP for the given time in seconds. It takes the IP to timeout and the timeout time in seconds.
 
 ### `create`
-If you want to create custom commands in the build in command line you can use `create`. Just answer the questions about the name, the execution command and the description.
+If you want to create custom commands in the build in command line you can use `create`.<br>Just answer the questions about the name, the execution command and the description.<br>
+The custom command creation follow a very strict system so read this well. <br>
+<br>The first question that the terminal will ask you is the name of the command. This will be the name you will type in to run it.<br>Please do **not** use commas or spaces.<br><br>
+Next it will ask you for the execution command.<br>If you want to use aguments within your command replace those with `$<argument number>`. To use unlimmited arguments type `$*`, but this can only be done for the **last** argument you want to put in the command.<br><br>
+After this it will ask you to specify the arguments. Press enter if there are no arguments you want to use. if you have arguments type <argument_name> for each argument seperated by an space in the right order (`$1` is first then `$2`,... ). If you used an unlimmited argument type `<argument_name,...>` (after all the $<number>).
+
 
 ### `delete <COMMAND>`
 If you want to delete a custom command you can use this.
