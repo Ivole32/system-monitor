@@ -80,7 +80,7 @@ class command_handler():
             return "break flag"
 
         elif command == "help":
-            help_text = """\
+            help_text = r"""
 exit                        – Exit the program
 help                        – Show this help message
 q                           – Quit the terminal
@@ -107,7 +107,7 @@ ip-timeout <IP> <SECONDS>   – Temporarily block all traffic from the given IP 
                     command_string += "\n"
                 help_text += command_string
 
-            self.console.print(help_text)
+            self.console.print(help_text, style="")
 
         elif "kill" in command:
             try:
