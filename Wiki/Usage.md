@@ -1,5 +1,3 @@
-# Usage
-
 ## Non root user (only display)
 ### 1. cd to repository
 Open a terminal and use ```cd <Repository Path>```

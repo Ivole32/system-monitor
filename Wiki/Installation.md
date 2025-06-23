@@ -1,5 +1,3 @@
-# Installation
-
 ## 1. Install all linux packages
 If you are not the administrator of the system you have to skip to 2. but unfortunally you won't have the abillity to use the build in command line to ban or timeout IP's and more.
 
@@ -35,4 +33,4 @@ Currently there is no documentation to install the python requirements in a venv
 
 **If** you want to use the program as **sudo user** (for the build in command line) make sure you use sudo before the ```pip``` command.
 
-If you want to know how tu use the program look [here]()
+If you want to know how tu use the program look [here](https://github.com/Ivole32/system-monitor/wiki/Usage)
