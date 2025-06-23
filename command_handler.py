@@ -173,11 +173,14 @@ ip-timeout <IP> <SECONDS>   – Temporarily block all traffic from the given IP 
                         while True:
                             try:
                                 system_command = system_command.replace(f"${i}", arguments[i-1])
+                                arguments[i-1].delete()
                                 i += 1
 
                             except Exception as e:
                                 self.console.log(f"Exception: {e}")
                                 break
+
+                        system_command = system_command.replace("$*", " ".join(arguments))
 
                     os.system(system_command)
 
