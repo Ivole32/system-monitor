@@ -25,12 +25,13 @@ You can find the installation instructions for git [here](https://github.com/git
 #### 2. Solution
 You can also download the repository manually from [here](https://github.com/ivole32/system-monitor).
 
-
 ## 3. Install python requirements
 To install all pyton requirements cd into the repository and run ```pip install -r requirements.txt```
 
 Currently there is no documentation to install the python requirements in a venv. But hey you are on linux. Find it out by yourself.
 
-**If** you want to use the program as **sudo user** (for the build in command line) make sure you use sudo before the ```pip``` command.
+**If** you want to use the program as **sudo user** (for the build in command line) make sure you use sudo before the ```pip``` command. 
+
+**Note:** On **Fedora Linux** I had to run ```sudo dnf install python3.13-devel```, because pip wasn't abled to install ```pynput``` without that. If you don't want to use the command line you can also remove ```pynput==1.8.1``` from ```requirements.txt```
 
 If you want to know how tu use the program look [here](https://github.com/Ivole32/system-monitor/wiki/Usage)

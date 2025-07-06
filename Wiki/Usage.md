@@ -15,7 +15,7 @@ Go to the terminal type ```sudo python3 ./main.py``` and hit enter.
 Now you can see the system monitor. If you want to use the build in command tool proced to step **3**.
 
 ### 3. Use the command line tool
-To use the build in command line tool simply hold  down ```c``` and wait untill ```Command >``` pops up.
+To use the build in command line tool simply press ```c``` and wait untill ```Command >``` pops up.
 
 You can now use help to see the commands or go [here](#build-in-commands)
 

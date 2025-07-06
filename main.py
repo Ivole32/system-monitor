@@ -2,10 +2,9 @@ import threading
 import psutil
 import time
 import os
-from pynput import keyboard
 
 if os.geteuid() == 0:
-    #import keyboard
+    from pynput import keyboard
     sudo_user = True
 else:
     sudo_user = False
@@ -47,8 +46,11 @@ def on_press(key):
         pass
 
 def start_listener():
-    with keyboard.Listener(on_press=on_press) as listener:
-        listener.join()
+    global sudo_user
+
+    if sudo_user:
+        with keyboard.Listener(on_press=on_press) as listener:
+            listener.join()
 
 def get_system_stats_table():
     global min_cpu, max_cpu, min_ram, max_ram, min_disk, max_disk
@@ -143,6 +145,7 @@ def main_loop():
                     command = prompt("Command > ", history=history)
                     result = command_handler.execute_command(command)
                     if result == "break flag":
+                        command_triggered = False
                         break
                     if result == "create":
                         command_name = prompt("Command Name> ")
