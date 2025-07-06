@@ -1,9 +1,11 @@
+import threading
 import psutil
 import time
 import os
+from pynput import keyboard
 
 if os.geteuid() == 0:
-    import keyboard
+    #import keyboard
     sudo_user = True
 else:
     sudo_user = False
@@ -33,6 +35,20 @@ min_ram, max_ram = None, None
 min_disk, max_disk = None, None
 
 history.append_string("help")
+
+command_triggered = False
+
+def on_press(key):
+    global command_triggered
+    try:
+        if key.char == 'c':
+            command_triggered = True
+    except AttributeError:
+        pass
+
+def start_listener():
+    with keyboard.Listener(on_press=on_press) as listener:
+        listener.join()
 
 def get_system_stats_table():
     global min_cpu, max_cpu, min_ram, max_ram, min_disk, max_disk
@@ -112,9 +128,16 @@ def get_ssh_connections_table():
     return table
 
 def main_loop():
+    global command_triggered
+
     while True:
-        if sudo_user and allow_commandline and keyboard.is_pressed('c'):
+
+        listener_thread = threading.Thread(target=start_listener, daemon=True)
+        listener_thread.start()
+
+        if sudo_user and allow_commandline and command_triggered:
             console.print("[bold yellow]Command mode activated![/bold yellow] (Submit with Enter, cancel with Ctrl+C or q)")
+            command_triggered = False
             while True:
                 try:
                     command = prompt("Command > ", history=history)
