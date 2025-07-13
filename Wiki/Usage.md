@@ -1,9 +1,19 @@
+# With executable
+## Open the download location
+Use ```cd <path>``` to go to the download location of the file
+
+## Run program
+Use ```./system-monitor``` to run the program
+
+**Note:** If you want to use the command line tool run the command with ````sudo```
+
+# Build from source
 ## Non root user (only display)
 ### 1. cd to repository
 Open a terminal and use ```cd <Repository Path>```
 
 ### 2. Run the python script
-Go to the terminal type ```python3 ./main.py``` and hit enter.
+Go to the terminal type ```./venv/bin/python3 ./main.py``` and hit enter.
 
 ## Root user (for the build in command tool)
 ### 1. cd to repository

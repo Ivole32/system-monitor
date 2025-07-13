@@ -1,0 +1,2 @@
+You can see the installation steps [here](https://github.com/Ivole32/system-monitor/wiki/Installation).<br>
+And if you want to know more about the usage take a look [here](https://github.com/Ivole32/system-monitor/wiki/Usage)
